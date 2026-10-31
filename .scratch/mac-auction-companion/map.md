@@ -14,7 +14,7 @@ A build-ready MVP specification for an open-source macOS app that uses the user'
 ### Boundaries confirmed by the user
 
 - This effort produces the specification and decisions before implementation.
-- English Pokémon single cards first, including both raw cards and graded slabs at launch. Supported graders and grades are not yet selected.
+- English Pokémon single cards first, including raw cards and PSA slabs at launch; remaining grade/printing boundaries are being specified in [exact raw and graded coverage](issues/04-card-identity-and-grading-scope.md).
 - The auction video is visible on the Mac. Initial capture uses a global hotkey and a previously selected window or region.
 - The first user is a collector judging whether a bid is fair. Bidding stays manual.
 - Bring your own AI means user-supplied API keys or compatible endpoints. Inference may have user-paid costs; this is distinct from price-data access.
@@ -48,6 +48,7 @@ A build-ready MVP specification for an open-source macOS app that uses the user'
 
 - Implementation, building the production app, and executing its release; those follow the completed specification.
 - Other card games, non-English cards, bundles or multi-card lot valuations, and separate-phone capture in this MVP.
+- CGC/BGS and other graders at launch; the user selected PSA first, with expansion later.
 - Windows, Linux, iOS, and browser-extension releases.
 - Automatic bidding, checkout, auction-account automation, and reseller profit optimization.
 - Continuous automatic watching as a launch requirement; the first release uses the selected-region hotkey workflow.

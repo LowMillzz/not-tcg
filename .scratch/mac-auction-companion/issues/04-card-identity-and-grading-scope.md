@@ -20,6 +20,22 @@ Clarify whether raw condition is explicitly unknown unless supplied, what happen
 
 - 2026-10-31: Claimed as the first available decision after research. [Free-data findings](../../../docs/research/free-card-and-price-data.md) and [AI findings](../../../docs/research/byo-ai-recognition.md) are inputs, not guarantees of grader/grade coverage. Await the user's grader, raw-condition, and exact-printing decisions; do not resolve on the agent's recommendations alone.
 
-### Open interview round
+### First interview round — answered
 
-Asked the user whether to start graded coverage with PSA versus multiple graders, keep raw condition unknown unless user-supplied versus a labeled default condition scenario, and require a resolved printing/grade before a matched price versus display multiple candidates' prices. Recommendations are PSA first, unknown raw condition, and resolve before matched price; these are proposals awaiting answers. Grader-specific grade ranges/qualifiers follow after grader selection. Aggregate-versus-sold evidence and data-source acceptance remain in the separate price-evidence decision.
+The user explicitly chose:
+
+- PSA slabs plus raw cards first; CGC/BGS follow later.
+- Raw condition remains unknown unless the collector supplies it. Any source price's condition basis must be shown; do not infer Near Mint from the stream.
+- Resolve the exact printing and relevant slab grade before displaying a matched price. Offer identity candidates or a rescan when the match is unresolved; do not substitute a lookalike printing or grade.
+
+These are accepted boundaries, not source-selection or performance decisions. Aggregate-versus-sold evidence, price-condition presentation, and missing-price behavior remain in the separate price-evidence ticket.
+
+### Second interview round — awaiting answers
+
+Ask the user to settle the newly unblocked details:
+
+- Plain numeric PSA card grades as printed versus qualified/non-numeric/autograph labels at launch. Recommendation: numeric card grades only for matched pricing; preserve atypical observed labels and show price unsupported, without rounding or grade substitution.
+- Catalog-backed English printing coverage with explicit unsupported/unresolved gaps versus a smaller named list of launch sets. Recommendation: catalog-backed coverage, measured before release rather than a promise to support every printing.
+- Visible slab-label reading versus required certificate lookup. Recommendation: visible-label reading with no authenticity claim and no required cert lookup in the MVP.
+
+No answer is assumed for this round. Keep the ticket claimed until its remaining scope questions are settled.

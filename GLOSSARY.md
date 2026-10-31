@@ -14,6 +14,13 @@ A card being valued without an assigned third-party slab grade. Its physical con
 **Graded slab**:
 A card in a grading company's labeled holder, with its stated grade. Reading the label does not establish authenticity or verify that the card deserves that grade.
 
+**Stated slab grade**:
+The grade printed on a slab's label, together with its grading company and any qualifiers or separate designations. It is a label reading, distinct from an independent assessment of the card or holder.
+_Avoid_: Verified grade for a transcribed label
+
+**Raw condition**:
+The physical wear and damage state of a raw card. It is separate from card-printing identity and from a grading company's stated slab grade.
+
 **Comparable sale**:
 A completed transaction sufficiently matched to the card printing and relevant condition or slab grade to inform its value. An active offer to sell is not a comparable sale.
 _Avoid_: Comp for an asking price or an aggregate valuation
