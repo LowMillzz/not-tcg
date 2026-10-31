@@ -33,7 +33,9 @@ A build-ready MVP specification for an open-source macOS app that uses the user'
 
 ## Decisions so far
 
-<!-- Empty at charting. Confirmed starting boundaries are in Notes; append named links only when tickets resolve. -->
+- [Which free sources can identify exact printings and provide credible raw and graded prices?](issues/01-free-card-and-price-data.md): Free catalogs and conditional graded aggregates exist, but no dependable, permission-established free raw-plus-slab sold-comp feed is established; the evidence and source choices remain human decisions.
+- [What macOS capture and distribution constraints shape the hotkey MVP?](issues/02-macos-capture-and-release.md): Public APIs support a conditional capture path; consent reuse, actual viewing-platform capture, crop geometry, and focus need targeted Mac validation before architecture is locked.
+- [Which BYO AI paths can return verifiable card identities quickly enough to test?](issues/03-byo-ai-recognition.md): Documented recognition paths are feasible to test; speed, accuracy, and raw-plus-slab coverage remain unmeasured, with provider compatibility and retention questions carried forward.
 
 ## Not yet specified
 

@@ -6,7 +6,7 @@ Labels: wayfinder:grilling
 Mode: HITL
 Status: open
 Assignee: unassigned
-Blocked by: 01, 02, 03, 04, 06, 08
+Blocked by: 01, 02, 03, 04, 06, 08, 15
 
 ## Question
 
@@ -17,3 +17,7 @@ Choose the clock's start and end, separating hotkey-to-identity, hotkey-to-actio
 Agree an ethically sourced replay corpus with ground truth for raw printings and supported slab grades, permission to share fixtures where applicable, representative blur/glare/angles/resolutions, and out-of-scope negatives. Define exact-match accuracy, false confident matches, abstention, variant and grade errors, stale-lot attribution, useful-evidence coverage, user correction time, and inference cost per useful scan.
 
 Set go/no-go thresholds and the later experiment sequence. This ticket defines acceptance; it does not invent benchmark results or build the app. Material scope changes must be confirmed with the user.
+
+## Comments
+
+- 2026-10-31: The [recognition research report](../../../docs/research/byo-ai-recognition.md) proposes an experiment matrix covering cold/warm requests, OCR versus direct vision, exact printing/grade accuracy, abstention, held-out images, tail latency, and inference cost. SDK default timeouts and retry behavior require explicit overrides in a future implementation. The proposal has no measured results and sets no accepted targets.

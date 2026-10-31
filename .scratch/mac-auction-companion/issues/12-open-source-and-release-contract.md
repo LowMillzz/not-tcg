@@ -6,7 +6,7 @@ Labels: wayfinder:grilling
 Mode: HITL
 Status: open
 Assignee: unassigned
-Blocked by: 01, 02, 06, 08
+Blocked by: 01, 02, 06, 08, 14
 
 ## Question
 
@@ -15,3 +15,7 @@ Which source-code license, data and image boundaries, and Mac distribution commi
 Agree the OSS license with the user; separate code licensing from card artwork, provider terms, source attribution, cached data rights, benchmark assets, and trademarks. Confirm the free-data enrollment path and whether users can actually reproduce the app's setup. Do not assume an API's terms grant rights to redistribute its catalog or example images.
 
 Select a distribution plan (for example, direct signed/notarized downloads versus an App Store release), who must supply signing ownership later, Intel/Apple Silicon policy informed by capture research, update and credential migration responsibilities, and the minimum contributor/CI documentation. Surface unavoidable release costs separately from the user's exclusion of paid price data. Choose repository hosting and preserve pending research pushes when a remote is configured; do not create an external repository from this ticket without authorization.
+
+## Comments
+
+- 2026-10-31: [Free-data evidence](../../../docs/research/free-card-and-price-data.md) includes non-revenue-use restrictions and unresolved upstream/artwork rights; the open-source license does not replace those permissions. [Mac evidence](../../../docs/research/macos-capture-and-release.md) separates direct notarized distribution from App Store obligations and release costs. Hardware and viewing-environment commitments now belong to [launch environment selection](14-launch-mac-and-viewing-environments.md); carry its result here without deciding it again.

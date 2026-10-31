@@ -15,3 +15,7 @@ With cropped uploads and screenshot disposal by default already accepted, what r
 Decide how users see and change the selected region, confirm which provider receives it, stop capture, understand provider-side retention, and avoid uploading surrounding chats or account details. Decide whether history stores identities and source links, whether any image storage can be opted into, how correction feedback is retained, and how deletion and opt-in diagnostics work. Identify whether accessibility permission is needed at all rather than assuming it.
 
 Establish credential handling for user-chosen endpoints and free data accounts, with no project-distributed secrets. Consider Keychain storage, redacted logs, clear errors, endpoint transport rules, and how local endpoints are represented. Do not promise the app can delete an image from an external provider once it has been sent.
+
+## Comments
+
+- 2026-10-31: [BYO AI research](03-byo-ai-recognition.md) supplies [provider retention and credential evidence](../../../docs/research/byo-ai-recognition.md). App-side screenshot disposal and provider-side retention require separate disclosure. The report flags inconsistent Anthropic descriptions and recent Google logging defaults; these are unresolved inputs to this decision, not a universal retention guarantee.
