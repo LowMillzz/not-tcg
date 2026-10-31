@@ -39,6 +39,7 @@ A build-ready MVP specification for an open-source macOS app that uses the user'
 - [Which BYO AI paths can return verifiable card identities quickly enough to test?](issues/03-byo-ai-recognition.md): Documented recognition paths are feasible to test; speed, accuracy, and raw-plus-slab coverage remain unmeasured, with provider compatibility and retention questions carried forward.
 - [Which exact raw printings and graded slabs does launch coverage include?](issues/04-card-identity-and-grading-scope.md): Catalog-backed English raw cards and plain numeric PSA slabs; resolve printing/grade before matched prices, keep raw condition unknown unless supplied, and make no authentication claim.
 - [What price evidence is sufficient for fair-bid guidance without paid data?](issues/06-price-evidence-contract.md): Direct named, dated source estimates in US-market USD are acceptable; unavailable prices get research links, while source eligibility and useful raw/PSA coverage remain launch gates.
+- [What capture, retention, and local-history boundaries should users control?](issues/07-crop-privacy-and-local-history.md): Keychain credentials, session-only non-image history, direct provider access, and setup-once immediate cropped uploads; no screenshot storage, telemetry, or project backend.
 
 ## Not yet specified
 
@@ -57,4 +58,5 @@ A build-ready MVP specification for an open-source macOS app that uses the user'
 - Continuous automatic watching as a launch requirement; the first release uses the selected-region hotkey workflow.
 - Paid price-data integrations or a project-hosted paid pricing service as MVP dependencies. Revisit after the MVP in a separate effort.
 - Custom valuation algorithms, cross-source price blending, source-statistic reconstruction, and synthetic fair-price ranges. The MVP displays eligible source estimates directly; revisit algorithms after the MVP.
+- Persistent scan history and longer-term history features; the user requested these for a future release. Screenshot archives, telemetry, and a project-hosted backend are excluded by the MVP privacy contract.
 - A guarantee that every arbitrary AI endpoint or local model meets the latency target. The compatibility contract and tested configurations remain decisions.

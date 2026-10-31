@@ -23,3 +23,7 @@ Checklist for the driving session:
 5. Report passed checks, failed checks and unverified points for source selection. If the candidate cannot meet the no-paid-data/raw-plus-PSA boundaries, preserve that failure and return it as a decision; do not silently switch to raw-only, asking-price-only, or a paid backend.
 
 Link a concise evidence artifact. Resolve when the observations needed for a source decision are established, including a documented negative outcome where appropriate. Final source acceptance and any remaining permission/expiry policy belong to the release contract; measured useful-price coverage belongs to the quality ticket. Until these pass, a free raw-plus-PSA pricing dependency is not established.
+
+## Comments
+
+- The resolved [privacy contract](07-crop-privacy-and-local-history.md) excludes a project-hosted backend. A provider requiring an app-owned proxy does not meet that baseline; record the incompatibility rather than silently adding hosting. Only identifiers needed for pricing go to that source; no screenshot upload is implied.

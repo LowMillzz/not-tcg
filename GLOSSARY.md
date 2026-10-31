@@ -4,6 +4,12 @@ An English Pokémon card auction companion for collectors checking whether a bid
 
 ## Language
 
+**Scan**:
+A collector-triggered attempt to identify the card currently shown and retrieve its price evidence. Multiple scans can refer to the same auction lot.
+
+**Scan history**:
+A record of previous scans and their associated card identities, outcomes, and source price evidence. A historical result does not establish which card is currently being auctioned.
+
 **Card printing**:
 A particular release of a card, distinguished by its set, collector number, language, edition, and finish or other variant. Cards sharing a name can be different printings.
 _Avoid_: Card name as a complete identity
