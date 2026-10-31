@@ -18,4 +18,4 @@ Use a cheap state model or interaction sketch with synthetic examples and user f
 
 ## Comments
 
-- 2026-10-31: In [exact raw and graded coverage](04-card-identity-and-grading-scope.md), the user accepted withholding a matched price until exact printing and relevant slab grade are resolved. Prototype identity candidates or a rescan within that boundary; showing prices for unresolved alternatives is not the chosen behavior. Raw condition stays unknown unless supplied by the collector, and PSA is the first supported grader. Remaining label/printing coverage details are still being discussed in that ticket.
+- 2026-10-31: [Exact raw and graded coverage](04-card-identity-and-grading-scope.md) is resolved. Prototype identity candidates or a rescan within its printing/grade gate; showing prices for unresolved alternatives is not the chosen behavior. Use its unknown-raw-condition, plain-numeric-PSA, catalog-gap, and visible-label-only boundaries when constructing ambiguous and unsupported examples; do not reopen settled scope.

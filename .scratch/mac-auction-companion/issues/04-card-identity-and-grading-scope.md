@@ -4,7 +4,7 @@ Parent: [Find the route to a build-ready macOS auction companion](../map.md)
 Type: grilling
 Labels: wayfinder:grilling
 Mode: HITL
-Status: claimed
+Status: resolved
 Assignee: t3 (live decision with user)
 Blocked by: 01
 
@@ -30,7 +30,7 @@ The user explicitly chose:
 
 These are accepted boundaries, not source-selection or performance decisions. Aggregate-versus-sold evidence, price-condition presentation, and missing-price behavior remain in the separate price-evidence ticket.
 
-### Second interview round — awaiting answers
+### Second interview round — answered
 
 Ask the user to settle the newly unblocked details:
 
@@ -38,4 +38,19 @@ Ask the user to settle the newly unblocked details:
 - Catalog-backed English printing coverage with explicit unsupported/unresolved gaps versus a smaller named list of launch sets. Recommendation: catalog-backed coverage, measured before release rather than a promise to support every printing.
 - Visible slab-label reading versus required certificate lookup. Recommendation: visible-label reading with no authenticity claim and no required cert lookup in the MVP.
 
-No answer is assumed for this round. Keep the ticket claimed until its remaining scope questions are settled.
+The user explicitly accepted all three recommendations: plain numeric PSA card grades first, catalog-backed English coverage with explicit gaps, and visible label reading without certificate lookup or authentication claims.
+
+### Resolution
+
+The user's two interview rounds settle this ticket's recognition and identity scope. Pricing sources, evidence sufficiency, and measured coverage remain separate decisions rather than implied approvals.
+
+## Answer
+
+- **Card scope:** English Pokémon single-card lots, both raw cards and PSA slabs. Attempt any printing the selected catalog can uniquely identify, including reprints or promos when the catalog distinguishes them. Do not promise every printing; missing or unresolved variants are explicitly unsupported, and actual coverage must be measured before release.
+- **Printing identity:** resolve the relevant name, set, collector number, language, edition, and finish/variant before displaying a matched price. Artwork/name similarity alone is insufficient when another plausible printing remains. If multiple targets or printings are plausible, offer candidates or a rescan; do not show a matched price for an unresolved alternative.
+- **Raw condition:** unknown unless supplied by the collector. Do not infer Near Mint or a slab grade from the stream. Any source price's condition basis must be explicit; which condition scenarios or aggregates may be shown is owned by the price-evidence ticket.
+- **Graded scope:** PSA first; CGC/BGS and other graders are later. Matched slab pricing requires the resolved printing, PSA identity, and a legible supported numeric card grade. Preserve that grade as printed; do not round, substitute another grade, or replace missing slab evidence with a raw value.
+- **Atypical labels:** qualified grades, Authentic/Altered labels, and separate autograph grades are outside MVP matched-price coverage. Preserve observed label information when readable and show price unsupported instead of collapsing it into a supported numeric card grade.
+- **Verification boundary:** read the visible label. No required certificate lookup, independent physical grading, or slab/card authentication claim is included in the MVP.
+
+This resolution chooses recognition coverage and the identity gate only. It does not establish a viable free PSA price feed, a minimum useful-coverage percentage, a source selection, or any speed/accuracy result. Those remain in [price evidence](06-price-evidence-contract.md), [latency and quality](09-latency-and-quality-bar.md), and the dependent prototype/architecture decisions.

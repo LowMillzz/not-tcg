@@ -14,7 +14,7 @@ A build-ready MVP specification for an open-source macOS app that uses the user'
 ### Boundaries confirmed by the user
 
 - This effort produces the specification and decisions before implementation.
-- English Pokémon single cards first, including raw cards and PSA slabs at launch; remaining grade/printing boundaries are being specified in [exact raw and graded coverage](issues/04-card-identity-and-grading-scope.md).
+- English Pokémon single cards first, including raw cards and PSA slabs at launch; [exact raw and graded coverage](issues/04-card-identity-and-grading-scope.md) defines the resolved identity boundaries.
 - The auction video is visible on the Mac. Initial capture uses a global hotkey and a previously selected window or region.
 - The first user is a collector judging whether a bid is fair. Bidding stays manual.
 - Bring your own AI means user-supplied API keys or compatible endpoints. Inference may have user-paid costs; this is distinct from price-data access.
@@ -36,6 +36,7 @@ A build-ready MVP specification for an open-source macOS app that uses the user'
 - [Which free sources can identify exact printings and provide credible raw and graded prices?](issues/01-free-card-and-price-data.md): Free catalogs and conditional graded aggregates exist, but no dependable, permission-established free raw-plus-slab sold-comp feed is established; the evidence and source choices remain human decisions.
 - [What macOS capture and distribution constraints shape the hotkey MVP?](issues/02-macos-capture-and-release.md): Public APIs support a conditional capture path; consent reuse, actual viewing-platform capture, crop geometry, and focus need targeted Mac validation before architecture is locked.
 - [Which BYO AI paths can return verifiable card identities quickly enough to test?](issues/03-byo-ai-recognition.md): Documented recognition paths are feasible to test; speed, accuracy, and raw-plus-slab coverage remain unmeasured, with provider compatibility and retention questions carried forward.
+- [Which exact raw printings and graded slabs does launch coverage include?](issues/04-card-identity-and-grading-scope.md): Catalog-backed English raw cards and plain numeric PSA slabs; resolve printing/grade before matched prices, keep raw condition unknown unless supplied, and make no authentication claim.
 
 ## Not yet specified
 
@@ -49,6 +50,7 @@ A build-ready MVP specification for an open-source macOS app that uses the user'
 - Implementation, building the production app, and executing its release; those follow the completed specification.
 - Other card games, non-English cards, bundles or multi-card lot valuations, and separate-phone capture in this MVP.
 - CGC/BGS and other graders at launch; the user selected PSA first, with expansion later.
+- Qualified/non-numeric PSA and separate autograph-grade pricing, certificate lookup, and authenticity verification; see [exact raw and graded coverage](issues/04-card-identity-and-grading-scope.md).
 - Windows, Linux, iOS, and browser-extension releases.
 - Automatic bidding, checkout, auction-account automation, and reseller profit optimization.
 - Continuous automatic watching as a launch requirement; the first release uses the selected-region hotkey workflow.

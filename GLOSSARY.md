@@ -8,6 +8,9 @@ An English Pokémon card auction companion for collectors checking whether a bid
 A particular release of a card, distinguished by its set, collector number, language, edition, and finish or other variant. Cards sharing a name can be different printings.
 _Avoid_: Card name as a complete identity
 
+**Resolved identity**:
+A card printing whose required distinguishing attributes have been established; a slab identity also includes its grading company and relevant stated grade. This does not imply that raw condition is known or that a slab is authentic.
+
 **Raw card**:
 A card being valued without an assigned third-party slab grade. Its physical condition is separate from its printing.
 
