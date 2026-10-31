@@ -24,6 +24,7 @@ A build-ready MVP specification for an open-source macOS app that uses the user'
 
 ### Working conventions
 
+- Keep the MVP simple. Prefer direct source estimates and minimal local behavior; source-specific valuation algorithms and cross-source blending are deferred beyond the MVP at the user's request.
 - Use the wayfinder, grilling, and domain-modeling skills for decision sessions; use research and prototype for those ticket types. Charting does not resolve human decision tickets.
 - This repo uses the local-Markdown tracker. [Tracker conventions](README.md) describe child relationships, claims, blocking, and frontier queries. The map indexes resolved decisions only; open tickets are discovered from the issue files.
 - Research is evidence, not approval to implement. Distinguish verified facts, provider claims, hypotheses, and measurements. No model-generated price is a sourced comparable sale.
@@ -37,11 +38,11 @@ A build-ready MVP specification for an open-source macOS app that uses the user'
 - [What macOS capture and distribution constraints shape the hotkey MVP?](issues/02-macos-capture-and-release.md): Public APIs support a conditional capture path; consent reuse, actual viewing-platform capture, crop geometry, and focus need targeted Mac validation before architecture is locked.
 - [Which BYO AI paths can return verifiable card identities quickly enough to test?](issues/03-byo-ai-recognition.md): Documented recognition paths are feasible to test; speed, accuracy, and raw-plus-slab coverage remain unmeasured, with provider compatibility and retention questions carried forward.
 - [Which exact raw printings and graded slabs does launch coverage include?](issues/04-card-identity-and-grading-scope.md): Catalog-backed English raw cards and plain numeric PSA slabs; resolve printing/grade before matched prices, keep raw condition unknown unless supplied, and make no authentication claim.
+- [What price evidence is sufficient for fair-bid guidance without paid data?](issues/06-price-evidence-contract.md): Direct named, dated source estimates in US-market USD are acceptable; unavailable prices get research links, while source eligibility and useful raw/PSA coverage remain launch gates.
 
 ## Not yet specified
 
 - Additional failure scenarios exposed by realistic auction footage: borderline printing distinctions, seller demonstrations, obstructed labels, and transitions whose handling cannot yet be designed precisely.
-- Source-specific access or permission work that may become necessary once free sources have been investigated. No signup task is implied until its purpose is known.
 - Onboarding and recovery details exposed by testing permissions, endpoint compatibility, missing source access, and revoked credentials.
 - Additional extension or catalog migration decisions revealed by the selected recognition and pricing pipeline.
 
@@ -55,4 +56,5 @@ A build-ready MVP specification for an open-source macOS app that uses the user'
 - Automatic bidding, checkout, auction-account automation, and reseller profit optimization.
 - Continuous automatic watching as a launch requirement; the first release uses the selected-region hotkey workflow.
 - Paid price-data integrations or a project-hosted paid pricing service as MVP dependencies. Revisit after the MVP in a separate effort.
+- Custom valuation algorithms, cross-source price blending, source-statistic reconstruction, and synthetic fair-price ranges. The MVP displays eligible source estimates directly; revisit algorithms after the MVP.
 - A guarantee that every arbitrary AI endpoint or local model meets the latency target. The compatibility contract and tested configurations remain decisions.

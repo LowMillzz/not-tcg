@@ -6,7 +6,7 @@ Labels: wayfinder:grilling
 Mode: HITL
 Status: open
 Assignee: unassigned
-Blocked by: 01, 02, 06, 08, 14
+Blocked by: 01, 02, 06, 08, 14, 16
 
 ## Question
 
@@ -19,3 +19,5 @@ Select a distribution plan (for example, direct signed/notarized downloads versu
 ## Comments
 
 - 2026-10-31: [Free-data evidence](../../../docs/research/free-card-and-price-data.md) includes non-revenue-use restrictions and unresolved upstream/artwork rights; the open-source license does not replace those permissions. [Mac evidence](../../../docs/research/macos-capture-and-release.md) separates direct notarized distribution from App Store obligations and release costs. Hardware and viewing-environment commitments now belong to [launch environment selection](14-launch-mac-and-viewing-environments.md); carry its result here without deciding it again.
+
+- The resolved [price-evidence contract](06-price-evidence-contract.md) accepts direct source estimates rather than custom valuation algorithms. Use [free-source validation](16-validate-free-valuation-source.md) to choose a source with demonstrated raw/PSA records, access, usable quotas, expiry rules, and permitted display/cache behavior. Accepting aggregates does not approve a particular provider or its rights. This ticket owns final source acceptance; do not resolve it while that gate is unestablished.

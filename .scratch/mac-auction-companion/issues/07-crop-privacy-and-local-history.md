@@ -4,8 +4,8 @@ Parent: [Find the route to a build-ready macOS auction companion](../map.md)
 Type: grilling
 Labels: wayfinder:grilling
 Mode: HITL
-Status: open
-Assignee: unassigned
+Status: claimed
+Assignee: t3 (live decision with user)
 Blocked by: none
 
 ## Question
@@ -19,3 +19,12 @@ Establish credential handling for user-chosen endpoints and free data accounts, 
 ## Comments
 
 - 2026-10-31: [BYO AI research](03-byo-ai-recognition.md) supplies [provider retention and credential evidence](../../../docs/research/byo-ai-recognition.md). App-side screenshot disposal and provider-side retention require separate disclosure. The report flags inconsistent Anthropic descriptions and recent Google logging defaults; these are unresolved inputs to this decision, not a universal retention guarantee.
+
+- 2026-10-31: Claimed after the price-evidence contract resolved. Honor the user's request for a simple MVP. Propose a single minimal privacy/history baseline and confirm the hotkey upload behavior rather than introducing optional storage/telemetry systems by default.
+
+### First interview round — awaiting answers
+
+- Minimal baseline proposal: API keys in the Mac's Keychain; image data in memory only; non-image scan history only until quit; no telemetry, screenshot storage, or project-hosted backend. Send the crop only to the configured AI endpoint and necessary card identifiers only to the configured pricing source. Explain that external provider retention is separate from app retention. Persistent text-only history is an alternative if the user wants it.
+- Capture proposal: preview/confirm the region and destination during setup, then each deliberate hotkey sends the current crop immediately with a visible indicator and a cancel action, without a repeated confirmation dialog. No full-screen upload fallback; reselect if the crop/source becomes invalid. Window pixels may briefly exist in local memory before cropping; the upload is cropped.
+
+These remain proposals awaiting the user's choices. Source/endpoint transport compatibility and no-backend feasibility must still pass their respective validation decisions.

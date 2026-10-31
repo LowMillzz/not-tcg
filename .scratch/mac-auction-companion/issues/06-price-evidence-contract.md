@@ -4,7 +4,7 @@ Parent: [Find the route to a build-ready macOS auction companion](../map.md)
 Type: grilling
 Labels: wayfinder:grilling
 Mode: HITL
-Status: claimed
+Status: resolved
 Assignee: t3 (live decision with user)
 Blocked by: 01, 04
 
@@ -24,7 +24,7 @@ Do not let a model invent market prices or convert its confidence into pricing e
 
 - 2026-10-31: Claimed after [exact raw and graded coverage](04-card-identity-and-grading-scope.md) resolved. Its PSA-numeric, exact-printing, unknown-raw-condition, and ambiguity boundaries are inputs here, not questions to reopen.
 
-### First interview round — awaiting answers
+### First interview round — answered
 
 Settle the following independent choices before selecting or validating a source:
 
@@ -32,4 +32,20 @@ Settle the following independent choices before selecting or validating a source
 - For an identified card with no usable evidence, show price unavailable plus manual research links, or treat any such case as a launch blocker? Recommendation: explicit per-card unavailability, while retaining meaningful numeric-price coverage for both raw and PSA cards as a separate release criterion. Identification alone does not count as actionable price guidance.
 - Which market/currency is the initial comparison context? Recommendation: US market in USD, with source geography and shipping/tax inclusion explicit rather than treating cross-market prices as interchangeable.
 
-These are recommendations awaiting the user's answers. Accepting an evidence class does not approve a particular provider, its permissions, freshness, or grade/printing coverage. Raw unknown-condition presentation, source choice, acceptable staleness/sample sufficiency, and other dependent rules require later rounds within this ticket.
+The user accepted named, dated aggregate valuations, price-unavailable plus research links, and the US market in USD. They explicitly asked to keep the MVP simple and defer source algorithms. Accepting this evidence class does not approve a particular provider, its permissions, freshness, or raw/PSA coverage.
+
+### Resolution
+
+Use source-reported valuations directly for the MVP. Detailed source-specific valuation algorithms, cross-source blending, outlier handling, inferred ranges and proprietary fair-price calculations are deferred beyond this MVP rather than expanded into more policy interviews here.
+
+## Answer
+
+- **Evidence type:** named, dated source aggregate valuations are acceptable. Label them as source estimates, not individual sold comps. The model identifies the card; it does not invent a price.
+- **Calculation:** display an eligible source's reported estimate and any source-provided range without creating a new blended value, confidence percentage or synthesized range. Do not reimplement the source's valuation algorithm for this MVP. A provider's own method is attributable context, not an algorithm the app claims to validate or reproduce.
+- **Matching:** apply the resolved printing/grade gate from [card coverage](04-card-identity-and-grading-scope.md). Use the supported PSA grade exactly; do not substitute raw or adjacent-grade values. Raw condition remains unknown unless supplied. Label a raw source estimate's condition basis as reported, or as unspecified if the source does not supply one; a source condition is not an assessment of this particular card.
+- **Context:** use US-market USD evidence. Show the source name, source update date/age, relevant condition or PSA grade basis, and a research/source link. Keep source observation time separate from app fetch time. Shipping/tax inclusion is reported as known or unknown; do not silently treat unknown costs as zero or convert another market into equivalent US evidence.
+- **Unavailable:** if no usable evidence exists, show the identified card, price unavailable, and manual research links. Do not invent a number or silently downgrade slab pricing to raw pricing. This outcome counts as recognition, not successful price guidance.
+- **Release coverage:** useful numeric-price coverage for both supported raw cards and PSA slabs remains a release requirement. Occasional unavailable results are acceptable; a release that is normally recognition-only for slabs would change the agreed product and needs an explicit user decision. Quantitative thresholds belong to [latency and quality](09-latency-and-quality-bar.md).
+- **Source gate:** no source is selected by this resolution. The now-specific [free-source validation task](16-validate-free-valuation-source.md) must establish access, permitted distributed use, actual records, dates, condition/grade mapping and quota/refresh facts before the source can be committed to in the [open-source release contract](12-open-source-and-release-contract.md). Simple source freshness/expiry rules remain part of that validation/selection and the architecture; they must not be replaced with a fetched-now timestamp or a custom valuation algorithm. Until that gate passes, availability is unproved.
+
+This closes the product's price-evidence contract and simplifies its calculation scope; it does not close the free-data feasibility gate or approve source rights, coverage, sustained usage, freshness, or five-second performance.
