@@ -1,0 +1,1143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scan identity prototype — auction companion</title>
+<style>
+  :root{
+    --bg: var(--background, #f4f1e9);
+    --ink: var(--foreground, #1d2420);
+    --card: var(--card, #fffdf7);
+    --muted: var(--muted-foreground, #68706a);
+    --line: var(--border, #ddd7c9);
+    --accent: var(--primary, #146b58);
+    --accent-ink: var(--primary-foreground, #ffffff);
+    --accent-soft: var(--secondary, #e4f0ea);
+    --warn: var(--warning, #8a4b00);
+    --warn-soft: var(--warning-surface, #fdf1de);
+    --danger: var(--destructive, #a1372f);
+    --radius: var(--radius, 10px);
+    --font-sans: var(--font-sans, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+    --font-serif: ui-serif, Georgia, "Iowan Old Style", "Times New Roman", serif;
+    --font-mono: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  }
+  *{ box-sizing:border-box; }
+  html{ -webkit-text-size-adjust:100%; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-sans);
+    font-size:15px;
+    line-height:1.55;
+  }
+  .page{ max-width:1040px; margin:0 auto; padding:44px 24px 72px; }
+  .intro{ max-width:760px; margin-bottom:26px; }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:11px; font-weight:700; letter-spacing:.13em; text-transform:uppercase;
+    color:var(--accent); margin-bottom:12px;
+  }
+  .eyebrow::before{ content:""; width:10px; height:10px; border:2px solid currentColor; border-radius:50%; }
+  h1{
+    font-family:var(--font-serif);
+    font-weight:600; font-size:clamp(31px, 4.4vw, 44px); line-height:1.08;
+    letter-spacing:-.02em; margin:0 0 14px;
+  }
+  .lede{ font-size:17px; line-height:1.6; color:var(--ink); margin:0 0 12px; }
+  .synthetic{
+    display:flex; gap:10px; align-items:flex-start;
+    border:1px solid var(--line); border-left:3px solid var(--warn);
+    background:var(--warn-soft); color:var(--warn);
+    padding:12px 14px; border-radius:var(--radius); font-size:13px; line-height:1.5;
+    margin:18px 0 0;
+  }
+  .synthetic strong{ text-transform:uppercase; letter-spacing:.08em; font-size:11px; }
+  .rules{
+    display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:0;
+    border:1px solid var(--line); border-radius:var(--radius); overflow:hidden;
+    background:var(--card); margin:26px 0 28px;
+  }
+  .rule{ padding:14px 16px; border-right:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .rule:nth-child(3n){ border-right:0; }
+  .rule:nth-child(n+4){ border-bottom:0; }
+  @media (max-width:700px){
+    .rules{ grid-template-columns:1fr; }
+    .rule{ border-right:0; border-bottom:1px solid var(--line); }
+    .rule:last-child{ border-bottom:0; }
+  }
+  .rule b{ display:block; font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); margin-bottom:4px; }
+  .rule span{ display:block; font-size:13px; color:var(--muted); line-height:1.45; }
+  .layout{ display:grid; grid-template-columns:minmax(0,1.5fr) minmax(300px,1fr); gap:20px; align-items:start; }
+  @media (max-width:860px){ .layout{ grid-template-columns:1fr; } }
+  .panel{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:20px 20px 18px; margin-bottom:20px;
+  }
+  .panel-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:14px; margin-bottom:14px; }
+  h2{ font-family:var(--font-serif); font-size:21px; font-weight:600; letter-spacing:-.01em; margin:0; }
+  h3{ font-size:14px; font-weight:700; letter-spacing:.02em; margin:0 0 6px; }
+  .hint{ color:var(--muted); font-size:13px; margin:0 0 14px; }
+  .scan-ledger{
+    font-family:var(--font-mono); font-size:11px; color:var(--muted);
+    border:1px solid var(--line); border-radius:999px; padding:4px 9px; white-space:nowrap;
+  }
+  .last-change{
+    display:flex; gap:9px; align-items:baseline;
+    font-size:13px; line-height:1.45; padding:10px 12px; margin-bottom:12px;
+    background:var(--accent-soft); color:var(--ink); border-radius:8px;
+  }
+  .last-change span{
+    flex:0 0 auto; font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--accent);
+  }
+  .notice{
+    font-size:13px; line-height:1.45; padding:10px 12px; margin-bottom:12px;
+    border:1px solid var(--line); border-left:3px solid var(--warn);
+    background:var(--warn-soft); color:var(--warn); border-radius:8px;
+  }
+  .result-card{ border-top:1px solid var(--line); padding-top:16px; }
+  .result-card.empty{ border-top:0; padding-top:0; }
+  .result-title{ font-family:var(--font-serif); font-size:20px; line-height:1.3; margin:0 0 8px; }
+  .result-sub{ color:var(--muted); font-size:13px; margin:0 0 12px; }
+  .badges{ display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 12px; }
+  .badge{
+    display:inline-block; font-size:10px; font-weight:700; letter-spacing:.09em; text-transform:uppercase;
+    padding:3px 7px; border-radius:5px; border:1px solid var(--line); color:var(--muted); background:transparent;
+  }
+  .badge.accent{ color:var(--accent); border-color:var(--accent); background:var(--accent-soft); }
+  .badge.warn{ color:var(--warn); border-color:var(--warn); background:var(--warn-soft); }
+  .badge.dark{ color:var(--accent-ink); background:var(--accent); border-color:var(--accent); }
+  .identity{ font-size:16px; font-weight:650; line-height:1.35; margin:2px 0 4px; }
+  .meta{ color:var(--muted); font-size:12.5px; margin:0; }
+  .evidence{ list-style:none; padding:0; margin:10px 0 0; display:flex; flex-wrap:wrap; gap:5px 8px; }
+  .evidence li{
+    font-size:12px; color:var(--ink); background:rgba(127,127,127,.08);
+    border-radius:5px; padding:3px 7px; line-height:1.4;
+  }
+  .evidence li::before{ content:"✓ "; color:var(--accent); font-weight:700; }
+  .price{
+    margin:16px 0 8px; padding:15px 16px; border:1px solid var(--line); border-radius:9px;
+    background:rgba(127,127,127,.035);
+  }
+  .price .amount{ font-family:var(--font-serif); font-size:34px; line-height:1.1; letter-spacing:-.02em; }
+  .price .amount small{ font-family:var(--font-sans); font-size:12px; letter-spacing:.08em; color:var(--muted); margin-left:5px; }
+  .price .source{ font-size:13px; font-weight:600; margin-top:5px; }
+  .price .basis, .price .updated{ font-size:12.5px; color:var(--muted); margin-top:2px; }
+  .price .price-note{ font-size:11.5px; color:var(--warn); margin-top:9px; line-height:1.4; }
+  .price.unavailable{ background:var(--warn-soft); border-color:var(--warn); }
+  .price.unavailable .amount{ font-family:var(--font-sans); font-size:19px; font-weight:700; color:var(--warn); }
+  .links{ margin:8px 0 0; padding-left:18px; font-size:12.5px; color:var(--muted); }
+  .note{ font-size:12px; color:var(--muted); line-height:1.5; margin:12px 0 0; }
+  .guidance{
+    margin:12px 0 0; padding:10px 12px; border-left:2px solid var(--accent);
+    background:var(--accent-soft); font-size:13px; line-height:1.5; border-radius:0 6px 6px 0;
+  }
+  .kv{ font-size:13px; margin:0 0 8px; }
+  .kv b{ font-weight:650; }
+  .candidates{ display:grid; gap:10px; margin:14px 0 0; }
+  .candidate{ border:1px solid var(--line); border-radius:8px; padding:12px 13px; }
+  .candidate .identity{ font-size:14.5px; }
+  .candidate .evidence{ margin-top:8px; }
+  .candidate button{ margin-top:10px; }
+  .muted{ color:var(--muted); }
+  .small{ font-size:12.5px; }
+  .last-confirmed{
+    margin-top:16px; padding:11px 12px; border:1px dashed var(--line); border-radius:8px;
+    font-size:12.5px; line-height:1.5;
+  }
+  .last-confirmed b{ font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); display:block; margin-bottom:3px; }
+  .ledger{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:8px 14px; margin:16px 0 0; padding-top:14px; border-top:1px solid var(--line); }
+  .ledger div{ min-width:0; }
+  .ledger dt{ font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
+  .ledger dd{ margin:1px 0 0; font-family:var(--font-mono); font-size:12.5px; }
+  .field{ display:block; margin-bottom:14px; }
+  .field span{ display:block; font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:5px; }
+  select{
+    width:100%; font-family:var(--font-sans); font-size:13.5px; color:var(--ink);
+    background:var(--bg); border:1px solid var(--line); border-radius:7px; padding:8px 10px;
+  }
+  .button-grid{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  @media (max-width:420px){ .button-grid{ grid-template-columns:1fr; } }
+  button{
+    font-family:var(--font-sans); font-size:13px; font-weight:600; line-height:1.3;
+    color:var(--ink); background:var(--card); border:1px solid var(--line);
+    border-radius:7px; padding:9px 11px; text-align:left; cursor:pointer;
+  }
+  button:hover:not(:disabled){ border-color:var(--accent); }
+  button:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  button:disabled{ opacity:.4; cursor:not-allowed; }
+  button.primary{ background:var(--accent); border-color:var(--accent); color:var(--accent-ink); text-align:center; }
+  button.primary:hover:not(:disabled){ filter:brightness(1.08); }
+  button.wide{ grid-column:1 / -1; }
+  .tabs{ display:flex; flex-wrap:wrap; gap:6px; margin:0 0 18px; }
+  .tab{
+    font-size:12.5px; font-weight:600; padding:6px 11px; border-radius:999px;
+    border:1px solid var(--line); background:transparent; color:var(--muted); cursor:pointer;
+  }
+  .tab[aria-selected="true"]{ background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+  .scenario-head{ display:flex; gap:16px; align-items:flex-start; justify-content:space-between; margin-bottom:12px; }
+  .scenario-head p{ margin:0; font-size:13.5px; color:var(--muted); line-height:1.55; }
+  .scenario-head .restart{ flex:0 0 auto; font-size:12px; padding:6px 10px; }
+  .steps{ display:grid; gap:7px; margin-top:14px; }
+  .step{
+    display:flex; gap:11px; align-items:flex-start; width:100%;
+    padding:10px 12px; border:1px solid var(--line); border-radius:8px;
+    background:transparent; color:var(--muted); cursor:not-allowed; text-align:left;
+  }
+  .step .num{
+    flex:0 0 auto; width:21px; height:21px; border-radius:50%; border:1px solid currentColor;
+    display:inline-flex; align-items:center; justify-content:center; font-size:11px; font-weight:700;
+  }
+  .step .step-label{ display:block; font-size:13.5px; font-weight:650; color:inherit; }
+  .step .step-detail{ display:block; font-size:12px; line-height:1.45; color:inherit; opacity:.8; margin-top:1px; }
+  .step.done{ opacity:.6; cursor:default; }
+  .step.done .num{ background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+  .step.current{ border-color:var(--accent); background:var(--accent-soft); color:var(--ink); cursor:pointer; }
+  .step.current .num{ background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+  .complete{
+    display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin-top:14px; padding:11px 12px; border:1px solid var(--line); border-radius:8px;
+    font-size:13px; color:var(--muted);
+  }
+  .complete button{ font-size:12px; padding:6px 10px; }
+  footer{ margin-top:30px; padding-top:16px; border-top:1px solid var(--line); color:var(--muted); font-size:12px; line-height:1.6; }
+  .mono{ font-family:var(--font-mono); font-size:.94em; }
+</style>
+</head>
+<body>
+<main class="page">
+  <header class="intro">
+    <div class="eyebrow">Prototype · scan identity and ownership</div>
+    <h1>When the card is uncertain — or already gone</h1>
+    <p class="lede">A clickable state model for the auction companion. It explores one question: <strong>how should the app avoid confidently pricing the wrong printing, grade, or lot when the video is ambiguous or you scan again immediately?</strong></p>
+    <p class="lede">Drive the free-play buttons, or run a guided walkthrough below. Every card, label, AI response, and price is synthetic.</p>
+    <div class="synthetic">
+      <div><strong>Prototype only</strong><br>No screen capture, AI request, price lookup, or saved data. The price numbers are invented examples, not market evidence. This file answers a design question; it is not production code.</div>
+    </div>
+  </header>
+
+  <section class="rules" aria-label="Proposed scan rules">
+    <div class="rule"><b>One live scan</b><span>A new scan supersedes the old one. Late answers are rejected by scan ID.</span></div>
+    <div class="rule"><b>Ambiguity withholds price</b><span>Show alternatives and visible evidence. A tap confirms a printing; the model never picks for you.</span></div>
+    <div class="rule"><b>No grade guessing</b><span>If a required label field is unreadable, ask for a closer scan instead of inventing a grade.</span></div>
+    <div class="rule"><b>No confidence theatre</b><span>Calibrated confidence is unavailable, so the model's self-reported percentage is not shown as correctness.</span></div>
+    <div class="rule"><b>Last scan, not live</b><span>The app cannot detect lot changes. Every retained result stays labeled with its scan.</span></div>
+    <div class="rule"><b>No silent retry</b><span>Failures wait for a manual, billable retry. Reuse of a prior identity is explicit and limited to the preceding scan.</span></div>
+  </section>
+
+  <div class="layout">
+    <div>
+      <section class="panel" aria-live="polite" aria-label="Current state">
+        <div class="panel-head">
+          <h2>Current state</h2>
+          <span id="scanLedger" class="scan-ledger"></span>
+        </div>
+        <div id="lastChange" class="last-change"></div>
+        <div id="noticeWrap"></div>
+        <div id="currentResult" class="result-card"></div>
+        <div id="lastConfirmed" class="last-confirmed"></div>
+        <dl id="ledger" class="ledger"></dl>
+      </section>
+    </div>
+
+    <div>
+      <section class="panel" aria-label="Free play">
+        <h2>Free play</h2>
+        <p class="hint">Choose what the synthetic camera sees, then drive the scan. Buttons stay available so you can try illegal or out-of-order actions.</p>
+        <label class="field" for="sceneSelect">
+          <span>What is on screen?</span>
+          <select id="sceneSelect"></select>
+        </label>
+        <div class="button-grid">
+          <button id="btnScan" class="primary wide" data-action="scan">Scan selected region</button>
+          <button data-action="result">AI returns</button>
+          <button data-action="timeout">AI times out</button>
+          <button data-action="invalid">AI returns invalid output</button>
+          <button data-action="late">Deliver cancelled scan's late answer</button>
+          <button data-action="lot">A new lot appears</button>
+          <button data-action="reuse">Reuse last confirmed identity</button>
+          <button data-action="clear">Clear</button>
+        </div>
+        <p class="note">The app makes at most one AI request per scan. Nothing here auto-retries or switches providers.</p>
+      </section>
+    </div>
+  </div>
+
+  <section class="panel" aria-label="Guided walkthroughs">
+    <h2>Guided walkthroughs</h2>
+    <p class="hint">Each tab resets to a known state. Press the steps in order; the state panel above updates after every press.</p>
+    <div id="tabs" class="tabs" role="tablist" aria-label="Walkthroughs"></div>
+    <div id="scenario"></div>
+  </section>
+
+  <footer>
+    Prototype asset for <span class="mono">.scratch/mac-auction-companion/issues/10-ambiguity-and-card-changes.md</span>. Throwaway shell; the pure <span class="mono">ScanModel</span> module is the part worth lifting into the app.
+  </footer>
+</main>
+
+<script>
+/* =====================================================================
+   Portable logic module — no DOM, no persistence, no network.
+   Reduce(state, action) -> state. Fixtures are synthetic.
+   ===================================================================== */
+const ScanModel = (() => {
+  const IDENTITIES = {
+    'charizard-unlimited': {
+      label: 'Charizard · Base Set · 4/102 · Unlimited · Holo',
+      name: 'Charizard', set: 'Base Set', number: '4/102', language: 'English',
+      edition: 'Unlimited', finish: 'Holo', kind: 'raw', condition: 'Unknown'
+    },
+    'charizard-shadowless': {
+      label: 'Charizard · Base Set · 4/102 · Shadowless · Holo',
+      name: 'Charizard', set: 'Base Set', number: '4/102', language: 'English',
+      edition: 'Shadowless', finish: 'Holo', kind: 'raw', condition: 'Unknown'
+    },
+    'blastoise-psa9': {
+      label: 'Blastoise · Base Set · 2/102 · PSA 9',
+      name: 'Blastoise', set: 'Base Set', number: '2/102', language: 'English',
+      kind: 'slab', grader: 'PSA', grade: '9'
+    },
+    'blastoise-psa8': {
+      label: 'Blastoise · Base Set · 2/102 · PSA 8',
+      name: 'Blastoise', set: 'Base Set', number: '2/102', language: 'English',
+      kind: 'slab', grader: 'PSA', grade: '8'
+    },
+    'eevee-jungle-1st': {
+      label: 'Eevee · Jungle · 51/64 · 1st Edition',
+      name: 'Eevee', set: 'Jungle', number: '51/64', language: 'English',
+      edition: '1st Edition', finish: 'Normal', kind: 'raw', condition: 'Unknown'
+    }
+  };
+
+  const PRICES = {
+    'charizard-unlimited': {
+      status: 'estimate', amount: '$48.00', source: 'ExamplePrice',
+      updated: '2026-10-27', basis: 'Raw · source condition basis: NM'
+    },
+    'charizard-shadowless': {
+      status: 'estimate', amount: '$320.00', source: 'ExamplePrice',
+      updated: '2026-10-27', basis: 'Raw · source condition basis: NM'
+    },
+    'blastoise-psa9': {
+      status: 'estimate', amount: '$410.00', source: 'ExamplePrice',
+      updated: '2026-10-27', basis: 'PSA 9 · exact stated grade'
+    },
+    'blastoise-psa8': {
+      status: 'estimate', amount: '$240.00', source: 'ExamplePrice',
+      updated: '2026-10-27', basis: 'PSA 8 · exact stated grade'
+    },
+    'eevee-jungle-1st': {
+      status: 'unavailable',
+      links: ['eBay sold search', 'TCGplayer listing search']
+    }
+  };
+
+  const RESULTS = {
+    'charizard-unique': {
+      kind: 'resolved',
+      identityKey: 'charizard-unlimited',
+      evidence: ['Name reads “Charizard”', 'Set symbol matches Base Set', 'Collector number reads 4/102', 'Holo finish visible', 'Unlimited border confirmed']
+    },
+    'charizard-ambiguous': {
+      kind: 'ambiguous',
+      reason: 'Two Base Set Charizard printings fit the visible card. The border shadow cannot be confirmed from this angle.',
+      candidates: [
+        {
+          identityKey: 'charizard-unlimited',
+          selectable: true,
+          evidence: ['Name and set symbol match Base Set', 'Collector number 4/102', 'Holo finish visible']
+        },
+        {
+          identityKey: 'charizard-shadowless',
+          selectable: true,
+          evidence: ['Name and set symbol match Base Set', 'Collector number 4/102', 'Shadowless border not visible']
+        }
+      ],
+      note: 'Both candidates share a name, set, and number. No price is shown until one printing is confirmed. The app does not use the model’s self-reported confidence as a ranking or a correctness claim.'
+    },
+    'psa-grade-unreadable': {
+      kind: 'ambiguous',
+      reason: 'The slab is a PSA holder, but glare hides the grade digits. PSA 8 and PSA 9 remain plausible.',
+      rescanOnly: true,
+      candidates: [
+        {
+          identityKey: 'blastoise-psa9',
+          selectable: false,
+          evidence: ['PSA holder and label layout', 'Card and set readable', 'Grade digit obscured']
+        },
+        {
+          identityKey: 'blastoise-psa8',
+          selectable: false,
+          evidence: ['PSA holder and label layout', 'Card and set readable', 'Grade digit obscured']
+        }
+      ],
+      note: 'A guessed grade would price the wrong slab. Scan closer instead; the app will not choose between PSA 8 and PSA 9 from this frame.'
+    },
+    'blastoise-psa9': {
+      kind: 'resolved',
+      identityKey: 'blastoise-psa9',
+      evidence: ['PSA label readable', 'Card name and set readable', 'Collector number reads 2/102', 'Grade reads 9 (plain numeric)']
+    },
+    'cgc-slab': {
+      kind: 'unsupported',
+      observed: 'CGC 9 slab',
+      reason: 'CGC is outside the MVP’s matched-price coverage.',
+      guidance: 'The label can be preserved, but no price is shown and no raw or PSA substitute is offered.'
+    },
+    'psa-qualified': {
+      kind: 'unsupported',
+      observed: 'PSA 9 (OC) — qualified label',
+      reason: 'Qualified and non-numeric PSA labels are outside MVP matched-price coverage.',
+      guidance: 'The observed label is preserved. The app does not round it into PSA 9 or show a price.'
+    },
+    'catalog-gap': {
+      kind: 'unsupported',
+      observed: 'Eevee promo — set symbol and collector number unreadable',
+      reason: 'The printing cannot be matched to the launch catalog.',
+      guidance: 'No price is shown. Scan a clearer label or use a manual research link.'
+    },
+    'multi-card': {
+      kind: 'unsupported',
+      tone: 'abstain',
+      observed: 'Two cards inside the selected region',
+      reason: 'The MVP prices single-card lots only.',
+      guidance: 'Tighten the capture region to one card and scan again.'
+    },
+    'no-card': {
+      kind: 'unsupported',
+      tone: 'abstain',
+      observed: 'No single card',
+      reason: 'The selected region did not contain one identifiable card.',
+      guidance: 'Adjust the capture region and scan again.'
+    },
+    'eevee-no-price': {
+      kind: 'resolved',
+      identityKey: 'eevee-jungle-1st',
+      evidence: ['Name reads “Eevee”', 'Set symbol matches Jungle', 'Collector number reads 51/64', '1st Edition stamp visible']
+    }
+  };
+
+  const SCENES = [
+    { key: 'charizard-unique', label: 'Charizard, one exact printing' },
+    { key: 'charizard-ambiguous', label: 'Charizard, two plausible printings' },
+    { key: 'psa-grade-unreadable', label: 'PSA slab, grade obscured' },
+    { key: 'blastoise-psa9', label: 'PSA 9 slab, label readable' },
+    { key: 'cgc-slab', label: 'CGC slab (unsupported)' },
+    { key: 'psa-qualified', label: 'PSA qualified label (unsupported)' },
+    { key: 'catalog-gap', label: 'Printing missing from catalog' },
+    { key: 'multi-card', label: 'Two cards in frame' },
+    { key: 'no-card', label: 'No card in frame' },
+    { key: 'eevee-no-price', label: 'Recognized, but no price evidence' }
+  ];
+
+  function atFor(number) {
+    return '12:04:' + String(5 + number * 3).padStart(2, '0');
+  }
+
+  function initialState() {
+    return {
+      scanCounter: 0,
+      active: null,
+      superseded: null,
+      panel: { type: 'idle' },
+      lastConfirmed: null,
+      notice: null,
+      lateIgnored: 0,
+      lotHint: false,
+      lastChange: 'Ready. Press “Scan selected region” or start a walkthrough.'
+    };
+  }
+
+  function priceFor(identityKey) {
+    return PRICES[identityKey] || {
+      status: 'unavailable',
+      links: ['eBay sold search', 'TCGplayer listing search']
+    };
+  }
+
+  function panelFromResult(fixture, target) {
+    const base = {
+      scanId: target.id,
+      scanNumber: target.number,
+      at: target.at,
+      sceneKey: target.sceneKey
+    };
+    if (fixture.kind === 'resolved') {
+      return {
+        ...base,
+        type: 'resolved',
+        identityKey: fixture.identityKey,
+        identitySource: 'ai',
+        evidence: fixture.evidence || [],
+        price: priceFor(fixture.identityKey)
+      };
+    }
+    if (fixture.kind === 'ambiguous') {
+      return {
+        ...base,
+        type: 'ambiguous',
+        reason: fixture.reason,
+        candidates: fixture.candidates,
+        rescanOnly: !!fixture.rescanOnly,
+        note: fixture.note || ''
+      };
+    }
+    return {
+      ...base,
+      type: 'unsupported',
+      tone: fixture.tone || 'unsupported',
+      observed: fixture.observed,
+      reason: fixture.reason,
+      guidance: fixture.guidance
+    };
+  }
+
+  function startScan(state, sceneKey) {
+    const number = state.scanCounter + 1;
+    const target = { id: 'scan-' + number, number, sceneKey, at: atFor(number) };
+    let superseded = state.superseded;
+    let notice = null;
+
+    if (state.active) {
+      superseded = state.active;
+      notice = 'Scan #' + number + ' started. Scan #' + state.active.number +
+        ' was cancelled locally; the provider may still finish and bill that request.';
+    } else if (state.panel.type !== 'idle') {
+      notice = 'Scan #' + number + ' started. The previous result is no longer live.';
+    }
+
+    return {
+      ...state,
+      scanCounter: number,
+      active: target,
+      superseded,
+      panel: {
+        type: 'scanning',
+        scanId: target.id,
+        scanNumber: number,
+        at: target.at,
+        sceneKey
+      },
+      notice,
+      lotHint: false,
+      lastChange: 'Scan #' + number + ' started. One request will be made; no automatic retry.'
+    };
+  }
+
+  function settle(state, which, outcome, detail) {
+    const target = which === 'superseded' ? state.superseded : state.active;
+
+    if (!target) {
+      return {
+        ...state,
+        notice: 'No request is in flight for that scan. Start a scan first.',
+        lastChange: 'Nothing settled: there was no matching in-flight request.'
+      };
+    }
+
+    if (!state.active || state.active.id !== target.id) {
+      const current = state.active ? 'Scan #' + state.active.number + ' is current.' : 'No scan is current now.';
+      return {
+        ...state,
+        lateIgnored: state.lateIgnored + 1,
+        notice: 'Ignored a late outcome from scan #' + target.number + '. ' + current +
+          ' It did not change the visible result.',
+        lastChange: 'A late response was rejected. Only the owning scan may render.'
+      };
+    }
+
+    if (outcome === 'result') {
+      const panel = panelFromResult(RESULTS[target.sceneKey], target);
+      let lastConfirmed = state.lastConfirmed;
+      if (panel.type === 'resolved') {
+        lastConfirmed = {
+          scanNumber: panel.scanNumber,
+          scanId: panel.scanId,
+          identityKey: panel.identityKey,
+          source: panel.identitySource,
+          at: panel.at
+        };
+      }
+      return {
+        ...state,
+        active: null,
+        superseded: null,
+        panel,
+        lastConfirmed,
+        notice: null,
+        lotHint: false,
+        lastChange: panel.type === 'resolved'
+          ? 'Scan #' + target.number + ' resolved to one catalog identity.'
+          : panel.type === 'ambiguous'
+            ? 'Scan #' + target.number + ' is ambiguous. Price withheld until you confirm a printing.'
+            : 'Scan #' + target.number + ' returned no price: the observed item is outside the supported path.'
+      };
+    }
+
+    const reasons = {
+      timeout: { title: 'timed out', detail: 'No answer arrived before the scan deadline.' },
+      error: { title: 'failed', detail: 'The provider request failed (auth, balance, rate limit, or network).' },
+      invalid: { title: 'returned invalid output', detail: 'The response did not match the required identity schema.' }
+    };
+    const reason = reasons[outcome];
+    return {
+      ...state,
+      active: null,
+      superseded: null,
+      panel: {
+        type: 'failed',
+        scanId: target.id,
+        scanNumber: target.number,
+        at: target.at,
+        sceneKey: target.sceneKey,
+        reason: outcome,
+        detail: detail || reason.detail
+      },
+      notice: null,
+      lotHint: false,
+      lastChange: 'Scan #' + target.number + ' ' + reason.title + '. No automatic retry was made.'
+    };
+  }
+
+  function reuseEligible(state) {
+    const panel = state.panel;
+    if (panel.type !== 'failed' && panel.type !== 'ambiguous') return false;
+    if (!state.lastConfirmed) return false;
+    return state.lastConfirmed.scanNumber === panel.scanNumber - 1;
+  }
+
+  function choose(state, identityKey) {
+    const panel = state.panel;
+    if (panel.type !== 'ambiguous') {
+      return { ...state, notice: 'There is no unresolved candidate list to choose from.' };
+    }
+    const candidate = panel.candidates.find(c => c.identityKey === identityKey);
+    if (!candidate || !candidate.selectable) {
+      return { ...state, notice: 'That candidate cannot be confirmed from this scan. Scan closer instead.' };
+    }
+    const resolved = {
+      type: 'resolved',
+      scanId: panel.scanId,
+      scanNumber: panel.scanNumber,
+      at: panel.at,
+      sceneKey: panel.sceneKey,
+      identityKey,
+      identitySource: 'user',
+      evidence: candidate.evidence || [],
+      price: priceFor(identityKey)
+    };
+    return {
+      ...state,
+      panel: resolved,
+      lastConfirmed: {
+        scanNumber: resolved.scanNumber,
+        scanId: resolved.scanId,
+        identityKey,
+        source: 'user',
+        at: resolved.at
+      },
+      notice: null,
+      lastChange: 'You confirmed ' + IDENTITIES[identityKey].label + ' for scan #' + panel.scanNumber +
+        '. The price is tied to that identity, not to the model’s guess.'
+    };
+  }
+
+  function reuse(state) {
+    if (!reuseEligible(state)) {
+      return {
+        ...state,
+        notice: 'Reuse is available only after a failed or ambiguous scan, and only for the immediately preceding confirmed identity.',
+        lastChange: 'Reuse refused: the previous identity is not adjacent, or the current result does not need it.'
+      };
+    }
+    const panel = state.panel;
+    const last = state.lastConfirmed;
+    const resolved = {
+      type: 'resolved',
+      scanId: panel.scanId,
+      scanNumber: panel.scanNumber,
+      at: panel.at,
+      sceneKey: panel.sceneKey,
+      identityKey: last.identityKey,
+      identitySource: 'reused',
+      reusedFrom: last.scanNumber,
+      evidence: [],
+      price: priceFor(last.identityKey)
+    };
+    return {
+      ...state,
+      panel: resolved,
+      notice: 'Identity reused from scan #' + last.scanNumber + '. Verify the card is still the same lot.',
+      lastChange: 'Scan #' + panel.scanNumber + ' reused the identity confirmed by scan #' + last.scanNumber +
+        '. No new AI request was made.'
+    };
+  }
+
+  function nextLot(state) {
+    if (state.panel.type === 'idle') {
+      return {
+        ...state,
+        notice: 'There is no retained result to warn about. Start a scan first.',
+        lastChange: 'Nothing to mark: no result is on screen.'
+      };
+    }
+    return {
+      ...state,
+      lotHint: true,
+      notice: 'Lot changes are not detected. The result from scan #' + state.panel.scanNumber +
+        ' is still on screen and may belong to a different card.',
+      lastChange: 'Lot-change warning added to the retained result. The price did not change.'
+    };
+  }
+
+  function clear(state) {
+    return {
+      ...initialState(),
+      scanCounter: state.scanCounter,
+      lastChange: 'Cleared the visible result and the last confirmed identity. The scan counter was kept.'
+    };
+  }
+
+  function reduce(state, action) {
+    switch (action.type) {
+      case 'SCAN': return startScan(state, action.sceneKey);
+      case 'AI_RESULT': return settle(state, action.which || 'current', 'result');
+      case 'AI_TIMEOUT': return settle(state, action.which || 'current', 'timeout');
+      case 'AI_ERROR': return settle(state, action.which || 'current', 'error');
+      case 'AI_INVALID': return settle(state, action.which || 'current', 'invalid');
+      case 'CHOOSE': return choose(state, action.identityKey);
+      case 'REUSE': return reuse(state);
+      case 'NEXT_LOT': return nextLot(state);
+      case 'CLEAR': return clear(state);
+      default: return state;
+    }
+  }
+
+  return {
+    initialState, reduce, reuseEligible,
+    IDENTITIES, PRICES, RESULTS, SCENES
+  };
+})();
+
+/* =====================================================================
+   Page shell — renders the module state. No logic lives here.
+   ===================================================================== */
+const SCENARIOS = [
+  {
+    tab: 'Clean scan',
+    title: 'One printing, fully visible',
+    blurb: 'One printing is fully visible. The app resolves it and shows a direct source estimate. Raw condition stays unknown; the source’s condition basis is not an assessment of this card.',
+    steps: [
+      { label: 'Scan the card', detail: 'The synthetic camera sees one exact Charizard printing.', actions: [{ type: 'SCAN', sceneKey: 'charizard-unique' }] },
+      { label: 'Deliver the AI answer', detail: 'One catalog match comes back.', actions: [{ type: 'AI_RESULT', which: 'current' }] }
+    ]
+  },
+  {
+    tab: 'Two printings',
+    title: 'The printing is ambiguous',
+    blurb: 'The card could be Unlimited or Shadowless. The app shows both with the visible evidence and withholds price. Choosing one is your confirmation, not the model’s.',
+    steps: [
+      { label: 'Scan the card', detail: 'The border shadow is not visible from this angle.', actions: [{ type: 'SCAN', sceneKey: 'charizard-ambiguous' }] },
+      { label: 'Deliver the AI answer', detail: 'Two plausible printings come back. No price yet.', actions: [{ type: 'AI_RESULT', which: 'current' }] },
+      { label: 'Confirm “Unlimited · Holo”', detail: 'You decide which printing you are looking at.', actions: [{ type: 'CHOOSE', identityKey: 'charizard-unlimited' }] }
+    ]
+  },
+  {
+    tab: 'Hidden grade',
+    title: 'The grade is hidden by glare',
+    blurb: 'The slab is a PSA holder but the grade digits are not readable. A guessed grade would price the wrong item, so the app asks for a closer scan instead of choosing.',
+    steps: [
+      { label: 'Scan the slab', detail: 'The card is readable; the grade is not.', actions: [{ type: 'SCAN', sceneKey: 'psa-grade-unreadable' }] },
+      { label: 'Deliver the AI answer', detail: 'PSA 8 and PSA 9 remain plausible. Neither is selectable.', actions: [{ type: 'AI_RESULT', which: 'current' }] },
+      { label: 'Scan closer', detail: 'A new scan supersedes the unresolved one.', actions: [{ type: 'SCAN', sceneKey: 'blastoise-psa9' }] },
+      { label: 'Deliver the clearer answer', detail: 'The exact PSA 9 identity resolves.', actions: [{ type: 'AI_RESULT', which: 'current' }] }
+    ]
+  },
+  {
+    tab: 'Unsupported slab',
+    title: 'A label outside MVP coverage',
+    blurb: 'CGC and qualified PSA labels are outside matched-price coverage. The label is preserved, but the app shows no price and never substitutes a raw value or an adjacent grade.',
+    steps: [
+      { label: 'Scan a CGC slab', detail: 'The grader is readable and unsupported.', actions: [{ type: 'SCAN', sceneKey: 'cgc-slab' }] },
+      { label: 'Deliver the AI answer', detail: 'No price is eligible.', actions: [{ type: 'AI_RESULT', which: 'current' }] },
+      { label: 'Scan a qualified PSA label', detail: 'PSA 9 (OC) is preserved as observed.', actions: [{ type: 'SCAN', sceneKey: 'psa-qualified' }] },
+      { label: 'Deliver the AI answer', detail: 'Still no price; no rounding to PSA 9.', actions: [{ type: 'AI_RESULT', which: 'current' }] }
+    ]
+  },
+  {
+    tab: 'Late answer',
+    title: 'An old answer arrives late',
+    blurb: 'You scan lot A, then immediately scan lot B. A’s response arrives after B started. Ownership by scan ID rejects it; B’s answer is the only one allowed to render.',
+    steps: [
+      { label: 'Scan lot A', detail: 'A Charizard is on screen.', actions: [{ type: 'SCAN', sceneKey: 'charizard-unique' }] },
+      { label: 'Scan lot B immediately', detail: 'A PSA 9 Blastoise is now on screen. Scan A is superseded.', actions: [{ type: 'SCAN', sceneKey: 'blastoise-psa9' }] },
+      { label: 'Deliver scan A’s late answer', detail: 'It arrives out of order and must be rejected.', actions: [{ type: 'AI_RESULT', which: 'superseded' }] },
+      { label: 'Deliver scan B’s answer', detail: 'Only the current scan may own the result.', actions: [{ type: 'AI_RESULT', which: 'current' }] }
+    ]
+  },
+  {
+    tab: 'Timeout',
+    title: 'The deadline passes',
+    blurb: 'No response arrives before the deadline. The app makes no second request on its own. Retrying is a deliberate new scan and a new billable request.',
+    steps: [
+      { label: 'Scan the card', detail: 'One request starts.', actions: [{ type: 'SCAN', sceneKey: 'charizard-unique' }] },
+      { label: 'Let the request time out', detail: 'No automatic retry is made.', actions: [{ type: 'AI_TIMEOUT', which: 'current' }] },
+      { label: 'Retry manually', detail: 'A new scan and a new provider request.', actions: [{ type: 'SCAN', sceneKey: 'charizard-unique' }] },
+      { label: 'Deliver the retried answer', detail: 'The retry resolves.', actions: [{ type: 'AI_RESULT', which: 'current' }] }
+    ]
+  },
+  {
+    tab: 'Next lot',
+    title: 'The next lot appears unscanned',
+    blurb: 'A new card is on screen but you have not scanned yet. The app cannot detect the change, so the retained price stays visible with a last-scan warning until you scan again.',
+    steps: [
+      { label: 'Scan the first card', detail: 'A Charizard result is shown.', actions: [{ type: 'SCAN', sceneKey: 'charizard-unique' }] },
+      { label: 'Deliver the AI answer', detail: 'The price is attached to scan #1.', actions: [{ type: 'AI_RESULT', which: 'current' }] },
+      { label: 'Simulate the next lot starting', detail: 'The app cannot see this; the user has not scanned.', actions: [{ type: 'NEXT_LOT' }] },
+      { label: 'Scan the new card', detail: 'A fresh identity replaces the old result.', actions: [{ type: 'SCAN', sceneKey: 'blastoise-psa9' }] },
+      { label: 'Deliver the new answer', detail: 'The PSA 9 price is tied to the new scan.', actions: [{ type: 'AI_RESULT', which: 'current' }] }
+    ]
+  },
+  {
+    tab: 'Failed rescan',
+    title: 'A rescan fails; reuse is explicit',
+    blurb: 'You scan again and the new request fails. You may explicitly reuse the identity from the immediately preceding scan; it is labeled as reused, and no new AI request is made.',
+    steps: [
+      { label: 'Scan and resolve a card', detail: 'A Charizard identity is confirmed.', actions: [{ type: 'SCAN', sceneKey: 'charizard-unique' }, { type: 'AI_RESULT', which: 'current' }] },
+      { label: 'Scan the same lot again', detail: 'The new scan supersedes the old result.', actions: [{ type: 'SCAN', sceneKey: 'charizard-unique' }] },
+      { label: 'Let the rescan fail', detail: 'No automatic retry is made.', actions: [{ type: 'AI_ERROR', which: 'current' }] },
+      { label: 'Reuse scan #1’s identity', detail: 'One tap; the reuse is labeled, not silent.', actions: [{ type: 'REUSE' }] }
+    ]
+  },
+  {
+    tab: 'Two cards',
+    title: 'More than one card in frame',
+    blurb: 'The region contains two cards. MVP prices single-card lots only, so the app abstains rather than choosing one, then asks for a tighter scan.',
+    steps: [
+      { label: 'Scan the region', detail: 'Two cards are visible.', actions: [{ type: 'SCAN', sceneKey: 'multi-card' }] },
+      { label: 'Deliver the AI answer', detail: 'The app abstains; no price.', actions: [{ type: 'AI_RESULT', which: 'current' }] },
+      { label: 'Tighten the region and scan', detail: 'One card is now selected.', actions: [{ type: 'SCAN', sceneKey: 'charizard-unique' }] },
+      { label: 'Deliver the new answer', detail: 'The single-card identity resolves.', actions: [{ type: 'AI_RESULT', which: 'current' }] }
+    ]
+  },
+  {
+    tab: 'No price',
+    title: 'Recognized, but no price evidence',
+    blurb: 'Recognition succeeds but no usable price evidence exists. The app shows the identity, “price unavailable”, and research links — never a made-up number.',
+    steps: [
+      { label: 'Scan a recognizable card', detail: 'The printing resolves to Eevee · Jungle · 1st Edition.', actions: [{ type: 'SCAN', sceneKey: 'eevee-no-price' }] },
+      { label: 'Deliver the AI answer', detail: 'No eligible source estimate exists.', actions: [{ type: 'AI_RESULT', which: 'current' }] }
+    ]
+  }
+];
+
+let state = ScanModel.initialState();
+let activeScenario = 0;
+let stepIndex = 0;
+
+const $ = (id) => document.getElementById(id);
+const esc = (value) => String(value).replace(/[&<>"']/g, ch => ({
+  '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+}[ch]));
+
+function identityOf(key) {
+  return ScanModel.IDENTITIES[key];
+}
+
+function kindBadge(identity) {
+  if (!identity) return '';
+  if (identity.kind === 'slab') {
+    return '<span class="badge">PSA ' + esc(identity.grade) + '</span><span class="badge">SLAB</span>';
+  }
+  return '<span class="badge">RAW</span><span class="badge">CONDITION UNKNOWN</span>';
+}
+
+function evidenceList(items) {
+  if (!items || !items.length) return '';
+  return '<ul class="evidence">' + items.map(item => '<li>' + esc(item) + '</li>').join('') + '</ul>';
+}
+
+function priceBlock(price, identity) {
+  if (price.status === 'estimate') {
+    const condition = identity && identity.kind === 'raw'
+      ? '<div class="updated">Raw condition: unknown unless you supply it. The source basis above is not an assessment of this card.</div>'
+      : '<div class="updated">Stated grade read from the PSA label; no authenticity claim.</div>';
+    return '<div class="price">' +
+      '<div class="amount">' + esc(price.amount) + '<small>USD · SYNTHETIC</small></div>' +
+      '<div class="source">' + esc(price.source) + ' source estimate</div>' +
+      '<div class="basis">' + esc(price.basis) + '</div>' +
+      '<div class="updated">Source updated ' + esc(price.updated) + '</div>' +
+      condition +
+      '<div class="price-note">Illustrative number, not a sold comp. The MVP shows an eligible source estimate without blending or inventing a range.</div>' +
+      '</div>';
+  }
+  const links = (price.links || []).map(link => '<li>' + esc(link) + ' <span class="muted">(manual research link)</span></li>').join('');
+  return '<div class="price unavailable">' +
+    '<div class="amount">Price unavailable</div>' +
+    '<div class="basis">Recognition succeeded; price guidance did not. No number is invented.</div>' +
+    (links ? '<ul class="links">' + links + '</ul>' : '') +
+    '</div>';
+}
+
+function renderResult() {
+  const panel = state.panel;
+  if (panel.type === 'idle') {
+    return '<div class="result-card empty"><p class="result-title">No active result</p>' +
+      '<p class="result-sub">Press “Scan selected region” when a single card is visible. The app keeps one result at a time.</p></div>';
+  }
+
+  const stamp = '<span class="mono">#' + panel.scanNumber + ' · ' + esc(panel.at) + '</span>';
+
+  if (panel.type === 'scanning') {
+    const scene = ScanModel.SCENES.find(s => s.key === panel.sceneKey);
+    return '<div class="result-title">Scan ' + stamp + ' in flight</div>' +
+      '<p class="result-sub">Synthetic scene: ' + esc(scene ? scene.label : panel.sceneKey) + '</p>' +
+      '<div class="badges"><span class="badge warn">REQUEST IN FLIGHT</span><span class="badge">ONE REQUEST</span><span class="badge">NO AUTO-RETRY</span></div>' +
+      '<p class="note">A new scan supersedes this one. Local cancellation may not stop the provider or refund the request.</p>';
+  }
+
+  if (panel.type === 'resolved') {
+    const identity = identityOf(panel.identityKey);
+    const sourceBadge = panel.identitySource === 'user'
+      ? '<span class="badge accent">YOU CONFIRMED THIS PRINTING</span>'
+      : panel.identitySource === 'reused'
+        ? '<span class="badge warn">REUSED FROM SCAN #' + panel.reusedFrom + '</span>'
+        : '<span class="badge accent">CATALOG-VALIDATED FROM THIS SCAN</span>';
+    const subtitle = panel.identitySource === 'user'
+      ? 'printing confirmed by you'
+      : panel.identitySource === 'reused'
+        ? 'identity reused from scan #' + panel.reusedFrom
+        : 'catalog match resolved';
+    const lotWarning = state.lotHint
+      ? '<div class="notice">A new lot may be on screen. This result still belongs to scan #' + panel.scanNumber +
+        '; the app cannot detect lot changes. Scan again before bidding.</div>'
+      : '';
+    return lotWarning +
+      '<div class="result-title">' + esc(identity.label) + '</div>' +
+      '<p class="result-sub">Scan ' + stamp + ' · ' + subtitle + '</p>' +
+      '<div class="badges">' + sourceBadge + kindBadge(identity) + '<span class="badge">NOT LIVE · LAST SCAN</span></div>' +
+      evidenceList(panel.evidence) +
+      priceBlock(panel.price, identity) +
+      '<p class="note">This is the last scan, not a live view. The app cannot know when the next lot begins; the scan time is the only age signal.</p>';
+  }
+
+  if (panel.type === 'ambiguous') {
+    const candidates = panel.candidates.map(candidate => {
+      const identity = identityOf(candidate.identityKey);
+      const action = candidate.selectable
+        ? '<button class="primary small" data-action="choose" data-identity="' + candidate.identityKey + '">Use this printing</button>'
+        : '<span class="muted small">Not selectable from this frame.</span>';
+      return '<div class="candidate">' +
+        '<div class="identity">' + esc(identity.label) + '</div>' +
+        '<div class="badges">' + kindBadge(identity) + '</div>' +
+        evidenceList(candidate.evidence) +
+        action +
+        '</div>';
+    }).join('');
+
+    return '<div class="result-title">Price withheld — identity not resolved</div>' +
+      '<p class="result-sub">Scan ' + stamp + ' · ' + (panel.candidates.length) + ' plausible ' +
+      (panel.candidates.length === 1 ? 'target' : 'targets') + '</p>' +
+      '<div class="badges"><span class="badge warn">NO PRICE</span><span class="badge">NEEDS CONFIRMATION</span></div>' +
+      '<p>' + esc(panel.reason) + '</p>' +
+      '<div class="candidates">' + candidates + '</div>' +
+      '<p class="note">' + esc(panel.note) + '</p>' +
+      (panel.rescanOnly
+        ? '<p class="guidance">Scan closer. Guessing a required field would price the wrong item.</p>'
+        : '<p class="guidance">If neither printing is yours, scan again. Your choice applies to this scan only; it does not train or bias the next one.</p>');
+  }
+
+  if (panel.type === 'unsupported') {
+    const title = panel.tone === 'abstain' ? 'No price — capture problem' : 'No price — outside MVP coverage';
+    return '<div class="result-title">' + title + '</div>' +
+      '<p class="result-sub">Scan ' + stamp + ' · no eligible price</p>' +
+      '<div class="badges"><span class="badge warn">' + (panel.tone === 'abstain' ? 'ABSTAINED' : 'UNSUPPORTED') + '</span><span class="badge">NO SUBSTITUTION</span></div>' +
+      '<p class="kv"><b>Observed:</b> ' + esc(panel.observed) + '</p>' +
+      '<p>' + esc(panel.reason) + '</p>' +
+      '<p class="guidance">' + esc(panel.guidance) + '</p>';
+  }
+
+  if (panel.type === 'failed') {
+    const labels = { timeout: 'timed out', error: 'failed', invalid: 'returned invalid output' };
+    const canReuse = ScanModel.reuseEligible(state);
+    return '<div class="result-title">Scan ' + stamp + ' ' + labels[panel.reason] + '</div>' +
+      '<p class="result-sub">' + esc(panel.detail) + '</p>' +
+      '<div class="badges"><span class="badge warn">FAILED</span><span class="badge">NO AUTO-RETRY</span></div>' +
+      '<p class="note">No second request was made. A retry is a new scan, a new billable request, and a new identity ownership claim.</p>' +
+      '<div class="badges">' +
+      '<button class="small" data-action="retry">Retry this scan</button>' +
+      (canReuse ? '<button class="small" data-action="reuse">Reuse the previous identity instead</button>' : '') +
+      '</div>';
+  }
+
+  return '';
+}
+
+function renderLastConfirmed() {
+  const last = state.lastConfirmed;
+  if (!last) {
+    return '<b>Last confirmed identity</b>None yet. Reuse requires an earlier resolved or user-confirmed scan.';
+  }
+  const identity = identityOf(last.identityKey);
+  const source = last.source === 'user' ? 'confirmed by you' : 'resolved by AI and catalog';
+  return '<b>Last confirmed identity</b>Scan <span class="mono">#' + last.scanNumber + ' · ' + esc(last.at) + '</span><br>' +
+    esc(identity.label) + ' <span class="muted">· ' + source + '</span>';
+}
+
+function render() {
+  $('lastChange').innerHTML = '<span>Just now</span><div>' + esc(state.lastChange) + '</div>';
+  $('scanLedger').textContent = 'scan ' + (state.active ? '#' + state.active.number : '—') +
+    ' of ' + state.scanCounter;
+  $('noticeWrap').innerHTML = state.notice
+    ? '<div class="notice">' + esc(state.notice) + '</div>'
+    : '';
+  $('currentResult').innerHTML = renderResult();
+  $('lastConfirmed').innerHTML = renderLastConfirmed();
+
+  const last = state.lastConfirmed;
+  $('ledger').innerHTML =
+    '<div><dt>Scans started</dt><dd>' + state.scanCounter + '</dd></div>' +
+    '<div><dt>In flight</dt><dd>' + (state.active ? '#' + state.active.number : 'none') + '</dd></div>' +
+    '<div><dt>Cancelled / superseded</dt><dd>' + (state.superseded ? '#' + state.superseded.number : 'none') + '</dd></div>' +
+    '<div><dt>Late outcomes ignored</dt><dd>' + state.lateIgnored + '</dd></div>' +
+    '<div><dt>Lot warning</dt><dd>' + (state.lotHint ? 'on' : 'off') + '</dd></div>' +
+    '<div><dt>Reusable identity</dt><dd>' + (ScanModel.reuseEligible(state) ? '#' + last.scanNumber : 'no') + '</dd></div>';
+
+  const lateButton = document.querySelector('[data-action="late"]');
+  if (lateButton) {
+    lateButton.disabled = !state.superseded;
+    lateButton.textContent = state.superseded
+      ? 'Deliver scan #' + state.superseded.number + '’s late answer'
+      : 'Deliver cancelled scan’s late answer';
+  }
+  const reuseButton = document.querySelector('[data-action="reuse"]');
+  if (reuseButton) {
+    reuseButton.disabled = !ScanModel.reuseEligible(state);
+    reuseButton.textContent = ScanModel.reuseEligible(state)
+      ? 'Reuse identity from scan #' + last.scanNumber
+      : 'Reuse last confirmed identity';
+  }
+
+  renderTabs();
+  renderScenario();
+}
+
+function renderTabs() {
+  $('tabs').innerHTML = SCENARIOS.map((scenario, index) =>
+    '<button class="tab" role="tab" aria-selected="' + (index === activeScenario) + '" data-tab="' + index + '">' +
+    esc(scenario.tab) + '</button>'
+  ).join('');
+}
+
+function renderScenario() {
+  const scenario = SCENARIOS[activeScenario];
+  const steps = scenario.steps.map((step, index) => {
+    const done = index < stepIndex;
+    const current = index === stepIndex;
+    return '<button class="step ' + (done ? 'done ' : '') + (current ? 'current' : '') + '" data-step="' + index + '"' +
+      (current ? '' : ' disabled') + '>' +
+      '<span class="num">' + (done ? '✓' : index + 1) + '</span>' +
+      '<span><span class="step-label">' + esc(step.label) + '</span>' +
+      '<span class="step-detail">' + esc(step.detail) + '</span></span>' +
+      '</button>';
+  }).join('');
+
+  const complete = stepIndex >= scenario.steps.length
+    ? '<div class="complete">Walkthrough complete. Free play continues from this state. <button data-restart="true">Run it again</button></div>'
+    : '';
+
+  $('scenario').innerHTML =
+    '<div class="scenario-head">' +
+    '<div><h3>' + esc(scenario.title) + '</h3><p>' + esc(scenario.blurb) + '</p></div>' +
+    '<button class="restart" data-restart="true">Restart</button>' +
+    '</div>' +
+    '<div class="steps">' + steps + '</div>' + complete;
+}
+
+function restartScenario() {
+  state = ScanModel.initialState();
+  stepIndex = 0;
+  render();
+}
+
+function selectScenario(index) {
+  activeScenario = index;
+  restartScenario();
+}
+
+function apply(action) {
+  state = ScanModel.reduce(state, action);
+  render();
+  syncSceneSelect();
+}
+
+function syncSceneSelect() {
+  const select = $('sceneSelect');
+  if (select.value !== '') return;
+  select.value = 'charizard-unique';
+}
+
+document.addEventListener('click', (event) => {
+  const tab = event.target.closest('[data-tab]');
+  if (tab) {
+    selectScenario(Number(tab.dataset.tab));
+    return;
+  }
+
+  const restart = event.target.closest('[data-restart]');
+  if (restart) {
+    restartScenario();
+    return;
+  }
+
+  const step = event.target.closest('[data-step]');
+  if (step && !step.disabled) {
+    const index = Number(step.dataset.step);
+    if (index !== stepIndex) return;
+    const actions = SCENARIOS[activeScenario].steps[index].actions;
+    actions.forEach(action => { state = ScanModel.reduce(state, action); });
+    stepIndex += 1;
+    render();
+    return;
+  }
+
+  const target = event.target.closest('[data-action]');
+  if (!target || target.disabled) return;
+  const action = target.dataset.action;
+
+  if (action === 'scan') {
+    apply({ type: 'SCAN', sceneKey: $('sceneSelect').value });
+  } else if (action === 'result') {
+    apply({ type: 'AI_RESULT', which: 'current' });
+  } else if (action === 'timeout') {
+    apply({ type: 'AI_TIMEOUT', which: 'current' });
+  } else if (action === 'invalid') {
+    apply({ type: 'AI_INVALID', which: 'current' });
+  } else if (action === 'late') {
+    apply({ type: 'AI_RESULT', which: 'superseded' });
+  } else if (action === 'lot') {
+    apply({ type: 'NEXT_LOT' });
+  } else if (action === 'reuse') {
+    apply({ type: 'REUSE' });
+  } else if (action === 'clear') {
+    apply({ type: 'CLEAR' });
+  } else if (action === 'choose') {
+    apply({ type: 'CHOOSE', identityKey: target.dataset.identity });
+  } else if (action === 'retry') {
+    const panel = state.panel;
+    apply({ type: 'SCAN', sceneKey: panel.sceneKey || $('sceneSelect').value });
+  }
+});
+
+const sceneSelect = $('sceneSelect');
+sceneSelect.innerHTML = ScanModel.SCENES.map(scene =>
+  '<option value="' + scene.key + '">' + esc(scene.label) + '</option>'
+).join('');
+sceneSelect.value = 'charizard-unique';
+
+render();
+</script>
+</body>
+</html>
