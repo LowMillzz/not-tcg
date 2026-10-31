@@ -17,7 +17,7 @@ A build-ready MVP specification for an open-source macOS app that uses the user'
 - English Pokémon single cards first, including raw cards and PSA slabs at launch; [exact raw and graded coverage](issues/04-card-identity-and-grading-scope.md) defines the resolved identity boundaries.
 - The auction video is visible on the Mac. Initial capture uses a global hotkey and a previously selected window or region.
 - The first user is a collector judging whether a bid is fair. Bidding stays manual.
-- Bring your own AI means user-supplied API keys or compatible endpoints. Inference may have user-paid costs; this is distinct from price-data access.
+- Bring your own AI starts with the user's OpenRouter API key and eligible model selection in the MVP; [AI compatibility](issues/08-ai-compatibility-contract.md) defines the request contract. Inference may have user-paid costs, distinct from price-data access.
 - No paid price-data subscription or paid data-service dependency in the MVP. Free accounts or API keys are acceptable, provided access is available to new users. Paid price-data integrations may be revisited after the MVP.
 - Cropped images may be sent to the configured AI provider. Provide an explicit capture indicator; discard screenshots by default and avoid full-screen uploads by default. Provider-side retention must be described separately from app retention.
 - Recognition success and pricing success are separate. Do not silently drop raw or graded coverage to make a source fit; surface any conflict with the launch scope as a human decision.
@@ -40,6 +40,7 @@ A build-ready MVP specification for an open-source macOS app that uses the user'
 - [Which exact raw printings and graded slabs does launch coverage include?](issues/04-card-identity-and-grading-scope.md): Catalog-backed English raw cards and plain numeric PSA slabs; resolve printing/grade before matched prices, keep raw condition unknown unless supplied, and make no authentication claim.
 - [What price evidence is sufficient for fair-bid guidance without paid data?](issues/06-price-evidence-contract.md): Direct named, dated source estimates in US-market USD are acceptable; unavailable prices get research links, while source eligibility and useful raw/PSA coverage remain launch gates.
 - [What capture, retention, and local-history boundaries should users control?](issues/07-crop-privacy-and-local-history.md): Keychain credentials, session-only non-image history, direct provider access, and setup-once immediate cropped uploads; no screenshot storage, telemetry, or project backend.
+- [Which AI configurations are supported and how is compatibility checked?](issues/08-ai-compatibility-contract.md): OpenRouter first, at most one AI request per scan and manual retry; image/schema and catalog validation are required, with specific model/route performance still unmeasured.
 
 ## Not yet specified
 
@@ -59,4 +60,5 @@ A build-ready MVP specification for an open-source macOS app that uses the user'
 - Paid price-data integrations or a project-hosted paid pricing service as MVP dependencies. Revisit after the MVP in a separate effort.
 - Custom valuation algorithms, cross-source price blending, source-statistic reconstruction, and synthetic fair-price ranges. The MVP displays eligible source estimates directly; revisit algorithms after the MVP.
 - Persistent scan history and longer-term history features; the user requested these for a future release. Screenshot archives, telemetry, and a project-hosted backend are excluded by the MVP privacy contract.
+- Direct OpenAI and Anthropic integrations are for later releases. Arbitrary service endpoints, direct Gemini integration and bundled local runtimes are not MVP requirements; eligible vendor models can still be used through OpenRouter.
 - A guarantee that every arbitrary AI endpoint or local model meets the latency target. The compatibility contract and tested configurations remain decisions.

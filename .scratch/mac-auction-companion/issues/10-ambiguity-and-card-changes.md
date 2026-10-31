@@ -4,8 +4,8 @@ Parent: [Find the route to a build-ready macOS auction companion](../map.md)
 Type: prototype
 Labels: wayfinder:prototype
 Mode: HITL
-Status: open
-Assignee: unassigned
+Status: claimed
+Assignee: t3 (prototype with user)
 Blocked by: 04, 08
 
 ## Question
@@ -19,3 +19,5 @@ Use a cheap state model or interaction sketch with synthetic examples and user f
 ## Comments
 
 - 2026-10-31: [Exact raw and graded coverage](04-card-identity-and-grading-scope.md) is resolved. Prototype identity candidates or a rescan within its printing/grade gate; showing prices for unresolved alternatives is not the chosen behavior. Use its unknown-raw-condition, plain-numeric-PSA, catalog-gap, and visible-label-only boundaries when constructing ambiguous and unsupported examples; do not reopen settled scope.
+
+- 2026-10-31: Claimed as the next available ticket after AI compatibility resolved. Build a throwaway state demo, not production UI: latest scan ownership, ambiguous identity without prices, canceled/late responses, and explicit last-scan labeling. Use synthetic fixtures, no screenshots, no provider calls, no persistence, and no valuation claims. Keep the prototype on a separate local prototype branch; record the user's verdict before resolving this ticket.

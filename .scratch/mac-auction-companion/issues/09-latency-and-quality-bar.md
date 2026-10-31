@@ -21,3 +21,5 @@ Set go/no-go thresholds and the later experiment sequence. This ticket defines a
 ## Comments
 
 - 2026-10-31: The [recognition research report](../../../docs/research/byo-ai-recognition.md) proposes an experiment matrix covering cold/warm requests, OCR versus direct vision, exact printing/grade accuracy, abstention, held-out images, tail latency, and inference cost. SDK default timeouts and retry behavior require explicit overrides in a future implementation. The proposal has no measured results and sets no accepted targets.
+
+- The resolved [AI compatibility contract](08-ai-compatibility-contract.md) selects OpenRouter and one AI request per scan with manual retry. Benchmark actual model/serving-route configurations with image input and schema output together; disable default routing fallbacks and client retries. Record the served model/provider rather than treating all OpenRouter traffic as one performance configuration. Model recommendations and paid test budget remain to be settled; no measurements exist yet.
